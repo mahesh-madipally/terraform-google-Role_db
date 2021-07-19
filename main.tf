@@ -197,7 +197,7 @@ resource "google_project_iam_member" "custom_role_member" {
 /******************************************
   Run helper module to get generic calculated data
  *****************************************/
-module "helper" {
+module "helper_org" {
   source               = "."
   bindings             = var.bindings
   mode                 = var.mode
@@ -209,16 +209,16 @@ module "helper" {
   Organization IAM binding authoritative
  *****************************************/
 resource "google_organization_iam_binding" "organization_iam_authoritative" {
-  for_each = module.helper.set_authoritative
-  org_id   = module.helper.bindings_authoritative[each.key].name
-  role     = module.helper.bindings_authoritative[each.key].role
-  members  = module.helper.bindings_authoritative[each.key].members
+  for_each = module.helper_org.set_authoritative
+  org_id   = module.helper_org.bindings_authoritative[each.key].name
+  role     = module.helper_org.bindings_authoritative[each.key].role
+  members  = module.helper_org.bindings_authoritative[each.key].members
   dynamic "condition" {
-    for_each = module.helper.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper.bindings_authoritative[each.key].condition]
+    for_each = module.helper_org.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper_org.bindings_authoritative[each.key].condition]
     content {
-      title       = module.helper.bindings_authoritative[each.key].condition.title
-      description = module.helper.bindings_authoritative[each.key].condition.description
-      expression  = module.helper.bindings_authoritative[each.key].condition.expression
+      title       = module.helper_org.bindings_authoritative[each.key].condition.title
+      description = module.helper_org.bindings_authoritative[each.key].condition.description
+      expression  = module.helper_org.bindings_authoritative[each.key].condition.expression
     }
   }
 }
@@ -227,16 +227,16 @@ resource "google_organization_iam_binding" "organization_iam_authoritative" {
   Organization IAM binding additive
  *****************************************/
 resource "google_organization_iam_member" "organization_iam_additive" {
-  for_each = module.helper.set_additive
-  org_id   = module.helper.bindings_additive[each.key].name
-  role     = module.helper.bindings_additive[each.key].role
-  member   = module.helper.bindings_additive[each.key].member
+  for_each = module.helper_org.set_additive
+  org_id   = module.helper_org.bindings_additive[each.key].name
+  role     = module.helper_org.bindings_additive[each.key].role
+  member   = module.helper_org.bindings_additive[each.key].member
   dynamic "condition" {
-    for_each = module.helper.bindings_additive[each.key].condition.title == "" ? [] : [module.helper.bindings_additive[each.key].condition]
+    for_each = module.helper_org.bindings_additive[each.key].condition.title == "" ? [] : [module.helper_org.bindings_additive[each.key].condition]
     content {
-      title       = module.helper.bindings_additive[each.key].condition.title
-      description = module.helper.bindings_additive[each.key].condition.description
-      expression  = module.helper.bindings_additive[each.key].condition.expression
+      title       = module.helper_org.bindings_additive[each.key].condition.title
+      description = module.helper_org.bindings_additive[each.key].condition.description
+      expression  = module.helper_org.bindings_additive[each.key].condition.expression
     }
   }
 }
@@ -245,8 +245,8 @@ resource "google_organization_iam_member" "organization_iam_additive" {
 /******************************************
   Run helper module to get generic calculated data
  *****************************************/
-module "helper" {
-  source               = "../helper"
+module "helper_proj" {
+  source               = "."
   bindings             = var.bindings
   mode                 = var.mode
   entities             = var.projects
@@ -258,16 +258,16 @@ module "helper" {
  *****************************************/
 
 resource "google_project_iam_binding" "project_iam_authoritative" {
-  for_each = module.helper.set_authoritative
-  project  = module.helper.bindings_authoritative[each.key].name
-  role     = module.helper.bindings_authoritative[each.key].role
-  members  = module.helper.bindings_authoritative[each.key].members
+  for_each = module.helper_proj.set_authoritative
+  project  = module.helper_proj.bindings_authoritative[each.key].name
+  role     = module.helper_proj.bindings_authoritative[each.key].role
+  members  = module.helper_proj.bindings_authoritative[each.key].members
   dynamic "condition" {
-    for_each = module.helper.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper.bindings_authoritative[each.key].condition]
+    for_each = module.helper_proj.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper_proj.bindings_authoritative[each.key].condition]
     content {
-      title       = module.helper.bindings_authoritative[each.key].condition.title
-      description = module.helper.bindings_authoritative[each.key].condition.description
-      expression  = module.helper.bindings_authoritative[each.key].condition.expression
+      title       = module.helper_proj.bindings_authoritative[each.key].condition.title
+      description = module.helper_proj.bindings_authoritative[each.key].condition.description
+      expression  = module.helper_proj.bindings_authoritative[each.key].condition.expression
     }
   }
 }
@@ -277,16 +277,16 @@ resource "google_project_iam_binding" "project_iam_authoritative" {
  *****************************************/
 
 resource "google_project_iam_member" "project_iam_additive" {
-  for_each = module.helper.set_additive
-  project  = module.helper.bindings_additive[each.key].name
-  role     = module.helper.bindings_additive[each.key].role
-  member   = module.helper.bindings_additive[each.key].member
+  for_each = module.helper_proj.set_additive
+  project  = module.helper_proj.bindings_additive[each.key].name
+  role     = module.helper_proj.bindings_additive[each.key].role
+  member   = module.helper_proj.bindings_additive[each.key].member
   dynamic "condition" {
-    for_each = module.helper.bindings_additive[each.key].condition.title == "" ? [] : [module.helper.bindings_additive[each.key].condition]
+    for_each = module.helper_proj.bindings_additive[each.key].condition.title == "" ? [] : [module.helper_proj.bindings_additive[each.key].condition]
     content {
-      title       = module.helper.bindings_additive[each.key].condition.title
-      description = module.helper.bindings_additive[each.key].condition.description
-      expression  = module.helper.bindings_additive[each.key].condition.expression
+      title       = module.helper_proj.bindings_additive[each.key].condition.title
+      description = module.helper_proj.bindings_additive[each.key].condition.description
+      expression  = module.helper_proj.bindings_additive[each.key].condition.expression
     }
   }
 }
