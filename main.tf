@@ -198,7 +198,7 @@ resource "google_project_iam_member" "custom_role_member" {
   Run helper module to get generic calculated data
  *****************************************/
 module "helper" {
-  source               = "../helper"
+  source               = "."
   bindings             = var.bindings
   mode                 = var.mode
   entities             = var.organizations
