@@ -198,7 +198,6 @@ resource "google_project_iam_member" "custom_role_member" {
   Run helper module to get generic calculated data
  *****************************************/
 module "helper_org" {
-  source               = "./."
   bindings             = var.bindings
   mode                 = var.mode
   entities             = var.organizations
@@ -246,7 +245,7 @@ resource "google_organization_iam_member" "organization_iam_additive" {
   Run helper module to get generic calculated data
  *****************************************/
 module "helper_proj" {
-  source               = "./."
+  source               = "./helper"
   bindings             = var.bindings
   mode                 = var.mode
   entities             = var.projects
