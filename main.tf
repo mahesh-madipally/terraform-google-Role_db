@@ -150,7 +150,6 @@ data "google_iam_testable_permissions" "unsupported_permissions" {
  *****************************************/
 resource "google_organization_iam_custom_role" "org-custom-role" {
   count = var.target_level == "org" ? 1 : 0
-
   org_id      = var.target_id
   role_id     = var.role_id
   title       = var.title == "" ? var.role_id : var.title
@@ -162,7 +161,6 @@ resource "google_organization_iam_custom_role" "org-custom-role" {
   Assigning custom_role to member
  *****************************************/
 resource "google_organization_iam_member" "custom_role_member" {
-
   for_each = var.target_level == "org" ? toset(var.members) : []
   org_id   = var.target_id
   role     = "organizations/${var.target_id}/roles/${local.custom-role-output}"
@@ -174,7 +172,6 @@ resource "google_organization_iam_member" "custom_role_member" {
  *****************************************/
 resource "google_project_iam_custom_role" "project-custom-role" {
   count = var.target_level == "project" ? 1 : 0
-
   project     = var.target_id
   role_id     = var.role_id
   title       = var.title == "" ? var.role_id : var.title
@@ -186,7 +183,6 @@ resource "google_project_iam_custom_role" "project-custom-role" {
   Assigning custom_role to member
  *****************************************/
 resource "google_project_iam_member" "custom_role_member" {
-
   for_each = var.target_level == "project" ? toset(var.members) : []
   project  = var.target_id
   role     = "projects/${var.target_id}/roles/${local.custom-role-output}"
