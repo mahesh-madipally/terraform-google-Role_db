@@ -8,5 +8,5 @@ data "vault_generic_secret" "gcp_credentials" {
 
 provider "google" {
   credentials = data.vault_generic_secret.gcp_credentials.data_json
-  project     = "db-sample-314713"
+  project     =  var.target_id
 }

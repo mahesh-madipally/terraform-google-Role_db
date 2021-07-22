@@ -5,6 +5,7 @@ locals {
   included_permissions = concat(flatten(values(data.google_iam_role.role_permissions)[*].included_permissions), var.permissions)
   permissions          = [for permission in local.included_permissions : permission if ! contains(local.excluded_permissions, permission)]
   custom-role-output   = (var.target_level == "project") ? google_project_iam_custom_role.project-custom-role[0].role_id : google_organization_iam_custom_role.org-custom-role[0].role_id
+  project_id = google_project_iam_custom_role.project-custom-role[0].project
 }
 
 /******************************************
@@ -48,6 +49,7 @@ resource "google_project_iam_custom_role" "project-custom-role" {
   description = var.description
   permissions = local.permissions
 }
+
 
 
 
