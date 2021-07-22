@@ -7,6 +7,13 @@ locals {
   custom-role-output   = (var.target_level == "project") ? google_project_iam_custom_role.project-custom-role[0].role_id : google_organization_iam_custom_role.org-custom-role[0].role_id
 }
 
+/******************************************
+  Permissions from predefined roles
+ *****************************************/
+data "google_iam_role" "role_permissions" {
+  for_each = toset(var.base_roles)
+  name     = each.value
+}
 
 /******************************************
   Permissions unsupported for custom roles
@@ -29,15 +36,6 @@ resource "google_organization_iam_custom_role" "org-custom-role" {
   permissions = local.permissions
 }
 
-/******************************************
-  Assigning custom_role to member
- *****************************************/
-resource "google_organization_iam_member" "custom_role_member" {
-  for_each = var.target_level == "org" ? toset(var.members) : []
-  org_id   = var.target_id
-  role     = "organizations/${var.target_id}/roles/${local.custom-role-output}"
-  member   = each.key
-}
 
 /******************************************
   Custom IAM Project Role
@@ -46,117 +44,12 @@ resource "google_project_iam_custom_role" "project-custom-role" {
   count = var.target_level == "project" ? 1 : 0
   project     = var.target_id
   role_id     = var.role_id
-  title       = var.title == "" ? var.role_id : var.title
+  title       = var.title
   description = var.description
   permissions = local.permissions
 }
 
-/******************************************
-  Assigning custom_role to member
- *****************************************/
-resource "google_project_iam_member" "custom_role_member" {
-  for_each = var.target_level == "project" ? toset(var.members) : []
-  project  = var.target_id
-  role     = "projects/${var.target_id}/roles/${local.custom-role-output}"
-  member   = each.key
-}
 
 
-/******************************************
-  Run helper module to get generic calculated data
- *****************************************/
-module "helper" {
-  source               = "./helper"
-  bindings             = var.bindings
-  mode                 = var.mode
-  entities             = var.organizations
-  conditional_bindings = var.conditional_bindings
-}
-
-/******************************************
-  Organization IAM binding authoritative
- *****************************************/
-resource "google_organization_iam_binding" "organization_iam_authoritative" {
-  for_each = module.helper.set_authoritative
-  org_id   = module.helper.bindings_authoritative[each.key].name
-  role     = module.helper.bindings_authoritative[each.key].role
-  members  = module.helper.bindings_authoritative[each.key].members
-  dynamic "condition" {
-    for_each = module.helper.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper.bindings_authoritative[each.key].condition]
-    content {
-      title       = module.helper.bindings_authoritative[each.key].condition.title
-      description = module.helper.bindings_authoritative[each.key].condition.description
-      expression  = module.helper.bindings_authoritative[each.key].condition.expression
-    }
-  }
-}
-
-/******************************************
-  Organization IAM binding additive
- *****************************************/
-resource "google_organization_iam_member" "organization_iam_additive" {
-  for_each = module.helper.set_additive
-  org_id   = module.helper.bindings_additive[each.key].name
-  role     = module.helper.bindings_additive[each.key].role
-  member   = module.helper.bindings_additive[each.key].member
-  dynamic "condition" {
-    for_each = module.helper.bindings_additive[each.key].condition.title == "" ? [] : [module.helper.bindings_additive[each.key].condition]
-    content {
-      title       = module.helper.bindings_additive[each.key].condition.title
-      description = module.helper.bindings_additive[each.key].condition.description
-      expression  = module.helper.bindings_additive[each.key].condition.expression
-    }
-  }
-}
-
-
-/******************************************
-  Run helper module to get generic calculated data
- *****************************************/
-module "helper" {
-  source               = "./helper"
-  bindings             = var.bindings
-  mode                 = var.mode
-  entities             = var.projects
-  conditional_bindings = var.conditional_bindings
-}
-
-/******************************************
-  Project IAM binding authoritative
- *****************************************/
-
-resource "google_project_iam_binding" "project_iam_authoritative" {
-  for_each = module.helper.set_authoritative
-  project  = module.helper.bindings_authoritative[each.key].name
-  role     = module.helper.bindings_authoritative[each.key].role
-  members  = module.helper.bindings_authoritative[each.key].members
-  dynamic "condition" {
-    for_each = module.helper.bindings_authoritative[each.key].condition.title == "" ? [] : [module.helper.bindings_authoritative[each.key].condition]
-    content {
-      title       = module.helper.bindings_authoritative[each.key].condition.title
-      description = module.helper.bindings_authoritative[each.key].condition.description
-      expression  = module.helper.bindings_authoritative[each.key].condition.expression
-    }
-  }
-}
-
-/******************************************
-  Project IAM binding additive
- *****************************************/
-
-resource "google_project_iam_member" "project_iam_additive" {
-  for_each = module.helper.set_additive
-  project  = module.helper.bindings_additive[each.key].name
-  role     = module.helper.bindings_additive[each.key].role
-  member   = module.helper.bindings_additive[each.key].member
-  dynamic "condition" {
-    for_each = module.helper.bindings_additive[each.key].condition.title == "" ? [] : [module.helper.bindings_additive[each.key].condition]
-    content {
-      title       = module.helper.bindings_additive[each.key].condition.title
-      description = module.helper.bindings_additive[each.key].condition.description
-      expression  = module.helper.bindings_additive[each.key].condition.expression
-    }
-  }
-}
 
 
