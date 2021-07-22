@@ -1,0 +1,19 @@
+{
+  "resource": [
+    {
+      "google_project_iam_custom_role": [
+        {
+          "project-custom-role": [
+            {
+              "description": "var.description",
+              "permissions": "local.permissions",
+              "project": "var.target_id",
+              "role_id": "var.role_id",
+              "title": "var.title"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
