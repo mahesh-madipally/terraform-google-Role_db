@@ -50,6 +50,19 @@ resource "google_project_iam_custom_role" "project-custom-role" {
   permissions = local.permissions
 }
 
+/******************************************
+  Custom IAM Project Role with Predefined-role
+ *****************************************/
+
+resource "google_project_iam_custom_role" "project-predefined-role" {
+  count = var.target_level == "project" ? 1 : 0
+  project     = var.target_id
+  role_id     = var.role_id
+  title       = var.title
+  description = var.description
+  base_roles  = var.base_roles
+  permissions = local.permissions
+}
 
 
 

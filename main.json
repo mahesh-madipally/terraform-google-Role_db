@@ -1,10 +1,41 @@
 {
   "resource": [
     {
+      "google_organization_iam_custom_role": [
+        {
+          "org-custom-role": [
+            {
+              "description": "var.description",
+              "org_id": "var.target_id",
+              "permissions": "local.permissions",
+              "role_id": "var.role_id",
+              "title": "var.title"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "google_project_iam_custom_role": [
         {
           "project-custom-role": [
             {
+              "description": "var.description",
+              "permissions": "local.permissions",
+              "project": "var.target_id",
+              "role_id": "var.role_id",
+              "title": "var.title"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "google_project_iam_custom_role": [
+        {
+          "project-predefined-role": [
+            {
+              "base_roles": "var.base_roles",
               "description": "var.description",
               "permissions": "local.permissions",
               "project": "var.target_id",
