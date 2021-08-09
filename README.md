@@ -7,7 +7,7 @@ Permissions that are [unsupported](https://cloud.google.com/iam/docs/custom-role
 ## Usage - Custom Role at Organization Level
 
 ```hcl
-module "custom-roles" {
+module "org-custom-role" {
   source = "mahesh-madipally/db_Role_template/google"
 
   target_level         = "org"
@@ -25,7 +25,7 @@ module "custom-roles" {
 ## Usage - Custom Role at Project Level
 
 ```hcl
-module "custom-roles" {
+module "project-custom-role" {
  source = "mahesh-madipally/db_Role_template/google"
 
   target_level         = "project"
