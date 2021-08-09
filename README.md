@@ -18,7 +18,6 @@ module "org-custom-role" {
   base_roles           = ["roles/iam.serviceAccountAdmin"]
   permissions          = ["iam.roles.list", "iam.roles.create", "iam.roles.delete"]
   excluded_permissions = ["iam.serviceAccounts.setIamPolicy"]
-  members              = ["user:user01@domain.com", "group:group01@domain.com"]
 }
 ```
 
@@ -36,7 +35,6 @@ module "project-custom-role" {
   base_roles           = ["roles/iam.serviceAccountAdmin"]
   permissions          = ["iam.roles.list", "iam.roles.create", "iam.roles.delete"]
   excluded_permissions = ["iam.serviceAccounts.setIamPolicy"]
-  members              = ["serviceAccount:member01@${var.target_id}.iam.gserviceaccount.com", "serviceAccount:member02@${var.target_id}.iam.gserviceaccount.com"]
 }
 ```
 
