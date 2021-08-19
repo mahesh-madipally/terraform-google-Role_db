@@ -24,18 +24,17 @@ module "org-custom-role" {
 ## Usage - Custom Role at Project Level
 
 ```hcl
-module "project-custom-role" {
- source = "mahesh-madipally/db_Role_template/google"
-
-  target_level         = "project"
-  target_id            = "project_id_123"
-  role_id              = "custom_role_id"
-  title                = "Custom Role Unique Title"
-  description          = "Custom Role Description"
-  base_roles           = ["roles/iam.serviceAccountAdmin"]
-  permissions          = ["iam.roles.list", "iam.roles.create", "iam.roles.delete"]
-  excluded_permissions = ["iam.serviceAccounts.setIamPolicy"]
-}
+module  "project-custom-role"{
+source			= "mahesh-madipally/db_Role_template/google"
+target_level     = "project"
+target_id            = "123456789"
+role_id              = "custom_role_id"
+title                = "Custom Role Unique Title"
+description          = "Custom Role Description"
+permissions 	 = ["iam.roles.list", "iam.roles.create"]
+base_roles       = ["roles/container.clusterAdmin"]
+excluded_permissions = ["container.clusters.delete] 
+ }
 ```
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
